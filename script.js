@@ -1,5 +1,3 @@
-// script.js
-
 AOS.init({
   once: true,
   duration: 800
@@ -24,21 +22,11 @@ function initParticles() {
   } else {
     particlesJS("particles-js", {
       particles: {
-        number: {
-          value: 80
-        },
-        color: {
-          value: c
-        },
-        shape: {
-          type: "circle"
-        },
-        opacity: {
-          value: 0.5
-        },
-        size: {
-          value: 3
-        },
+        number: { value: 80 },
+        color: { value: c },
+        shape: { type: "circle" },
+        opacity: { value: 0.5 },
+        size: { value: 3 },
         line_linked: {
           enable: true,
           distance: 120,
@@ -54,22 +42,12 @@ function initParticles() {
       },
       interactivity: {
         events: {
-          onhover: {
-            enable: true,
-            mode: "repulse"
-          },
-          onclick: {
-            enable: true,
-            mode: "push"
-          }
+          onhover: { enable: true, mode: "repulse" },
+          onclick: { enable: true, mode: "push" }
         },
         modes: {
-          repulse: {
-            distance: 100
-          },
-          push: {
-            particles_nb: 4
-          }
+          repulse: { distance: 100 },
+          push: { particles_nb: 4 }
         }
       },
       retina_detect: true
@@ -79,7 +57,6 @@ function initParticles() {
 
 const themeToggleBtn = document.getElementById('theme-toggle');
 
-// Function to set initial theme and button text
 function setInitialTheme() {
   const stored = localStorage.getItem('theme');
   const system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -87,10 +64,8 @@ function setInitialTheme() {
   document.documentElement.setAttribute('data-theme', initialTheme);
   themeToggleBtn.setAttribute('aria-label', `Switch to ${initialTheme==='dark'?'light':'dark'} theme`);
   themeToggleBtn.textContent = initialTheme === 'dark' ? '☀️' : '🌙';
-  // Also update particles background on initial load
   document.getElementById('particles-js').style.background = getComputedStyle(document.documentElement).getPropertyValue('--bg');
 }
-
 
 themeToggleBtn.addEventListener('click', () => {
   const root = document.documentElement;
@@ -100,14 +75,42 @@ themeToggleBtn.addEventListener('click', () => {
   localStorage.setItem('theme', nextTheme);
   themeToggleBtn.setAttribute('aria-label', `Switch to ${nextTheme==='dark'?'light':'dark'} theme`);
   themeToggleBtn.textContent = nextTheme === 'dark' ? '☀️' : '🌙';
-
-  // Update particles background and color when theme changes
   document.getElementById('particles-js').style.background = getComputedStyle(root).getPropertyValue('--bg');
-  initParticles(); // Re-initialize particles to apply new color
+  initParticles();
 });
 
-
 document.addEventListener('DOMContentLoaded', () => {
-  setInitialTheme(); // Set theme and button text on load
-  initParticles(); // Initialize particles with correct theme color
+  setInitialTheme();
+  initParticles();
+});
+
+// ✅ Contact Form Submission
+const form = document.getElementById("contact-form");
+const statusMsg = document.getElementById("form-status");
+
+form.addEventListener("submit", async function (e) {
+  e.preventDefault();
+  const data = new FormData(form);
+  try {
+    const response = await fetch(form.action, {
+      method: form.method,
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (response.ok) {
+      statusMsg.textContent = "Thank you! Your message has been sent.";
+      statusMsg.style.display = "block";
+      statusMsg.style.color = "green";
+      form.reset();
+    } else {
+      statusMsg.textContent = "Oops! Something went wrong.";
+      statusMsg.style.display = "block";
+      statusMsg.style.color = "red";
+    }
+  } catch (error) {
+    statusMsg.textContent = "Network error. Please try again.";
+    statusMsg.style.display = "block";
+    statusMsg.style.color = "red";
+  }
 });
